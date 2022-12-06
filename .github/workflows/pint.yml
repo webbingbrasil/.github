@@ -1,0 +1,26 @@
+name: pint
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  pint:
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Install dependencies
+        uses: "ramsey/composer-install@v2"
+      - name: Run Pint
+        run: ./vendor/bin/pint
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: >
+            style: apply pint code style
