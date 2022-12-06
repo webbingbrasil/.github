@@ -1,9 +1,7 @@
 name: normalize composer.json
 
 on:
-  push:
-    paths:
-      - "composer.json"
+  workflow_call:
 
 jobs:
   normalize:
