@@ -1,0 +1,29 @@
+name: normalize composer.json
+
+on:
+  push:
+    paths:
+      - "composer.json"
+
+jobs:
+  normalize:
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    timeout-minutes: 1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+
+      - name: Validate Composer configuration
+        run: composer validate --strict
+
+      - name: Install dependencies
+        run: composer install --no-interaction
+
+      - name: Normalize composer.json
+        run: composer normalize --indent-style=space --indent-size=4 --no-check-lock --no-update-lock --no-interaction --ansi
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: >
+            chore: normalize composer.json
