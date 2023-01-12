@@ -1,0 +1,41 @@
+name: deploy
+
+on:
+  workflow_call:
+    inputs:
+      php:
+        default: "8.1"
+        type: string
+      deployerVersion:
+        default: "7.0.2"
+        type: string
+      environmentName:
+        default: "production"
+        type: string
+      environmentUrl:
+        default: "laravel.site"
+        type: string
+
+concurrency: production_environment
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environmentName }}
+      url: ${{ inputs.environmentUrl }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ inputs.php }}
+
+      - name: Deploy
+        uses: deployphp/action@v1
+        with:
+          deployer-version: ${{ inputs.deployerVersion }}
+          dep: deploy
+          private-key: ${{ secrets.DEPLOY_KEY }}
