@@ -15,6 +15,8 @@ on:
       environmentUrl:
         default: "laravel.site"
         type: string
+      deployKey:
+        type: string
 
 jobs:
   deploy:
@@ -36,4 +38,4 @@ jobs:
         with:
           deployer-version: ${{ inputs.deployerVersion }}
           dep: deploy
-          private-key: ${{ secrets.DEPLOY_KEY }}
+          private-key: ${{ inputs.deployKey }}
