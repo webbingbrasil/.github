@@ -18,11 +18,6 @@ jobs:
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }}
     steps:
       - uses: actions/checkout@v3
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.composer/cache/files
-          key: dependencies-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -32,6 +27,7 @@ jobs:
       - name: Install dependencies
         uses: "ramsey/composer-install@v2"
         with:
+          custom-cache-key: dependencies-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
           composer-options: "${{ matrix.composer-options }}"
       - name: Run PHPStan
         run: ./vendor/bin/phpstan --error-format=github
