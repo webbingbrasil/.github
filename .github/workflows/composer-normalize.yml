@@ -27,7 +27,7 @@ jobs:
         run: composer validate --strict
 
       - name: Install dependencies
-        run: composer install --no-interaction
+        uses: "ramsey/composer-install@v2"
 
       - name: Normalize composer.json
         run: composer normalize --indent-style=space --indent-size=4 --no-check-lock --no-update-lock --no-interaction --ansi
