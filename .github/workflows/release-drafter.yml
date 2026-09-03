@@ -1,5 +1,25 @@
 name: Release Drafter
 
+# Reusable workflow: drafts the next GitHub release from merged PRs on the
+# repository default branch. Callers should restrict `push` to the default
+# branch so release-drafter runs only when that branch changes. Include
+# `pull_request` (opened, reopened, synchronize) in the caller workflow when
+# the repo's `.github/release-drafter.yml` defines `autolabeler`.
+#
+# Example caller:
+#
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     types: [opened, reopened, synchronize]
+#
+# jobs:
+#   release-drafter:
+#     uses: webbingbrasil/.github/.github/workflows/release-drafter.yml@main
+#     secrets: inherit
+
 on:
   workflow_call:
 
@@ -18,11 +38,11 @@ jobs:
       #  run: |
       #    echo "GHE_HOST=${GITHUB_SERVER_URL##https:\/\/}" >> $GITHUB_ENV
 
-      # Drafts your next Release notes as Pull Requests are merged into "master"
+      # Drafts the next release notes from PRs merged into the default branch.
       - uses: release-drafter/release-drafter@v5
-        # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
-        # with:
-        #   config-name: my-config.yml
-        #   disable-autolabeler: true
+        with:
+          # Always target the repository default branch (e.g. main), even when
+          # the caller workflow runs on pushes to other branches.
+          commitish: ${{ github.event.repository.default_branch }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
